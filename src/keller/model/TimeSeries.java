@@ -8,24 +8,35 @@ public class TimeSeries {
 	private String startDate = null;
 	private String endDate = null;
 	private Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+	public void setMap(Map<Integer, Integer> map) {
+		this.map = map;
+	}
+
 	public String getKey() {
 		return key;
 	}
+
 	public void setKey(String key) {
 		this.key = key;
 	}
+
 	public String getStartDate() {
 		return startDate;
 	}
+
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
+
 	public String getEndDate() {
 		return endDate;
 	}
+
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+
 	public Map<Integer, Integer> getMap() {
 		return map;
 	}
