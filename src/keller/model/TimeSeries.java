@@ -7,9 +7,9 @@ public class TimeSeries {
 	private String key;
 	private String startDate = null;
 	private String endDate = null;
-	private Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+	private Map<Integer, Double> map = new HashMap<Integer, Double>();
 
-	public void setMap(Map<Integer, Integer> map) {
+	public void setMap(Map<Integer, Double> map) {
 		this.map = map;
 	}
 
@@ -37,7 +37,7 @@ public class TimeSeries {
 		this.endDate = endDate;
 	}
 
-	public Map<Integer, Integer> getMap() {
+	public Map<Integer, Double> getMap() {
 		return map;
 	}
 }
