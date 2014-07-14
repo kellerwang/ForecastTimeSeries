@@ -50,7 +50,26 @@ public class Preprocess {
 		old.setMap(map);
 	}
 
-	// 设置Baseline Normalization
+	// 增加波动趋势的方法map类型
+	public static void setSpikeNormalization2(Map<Integer, Double> old,
+			double Alpha) {
+		int i = 0;
+		double previous = old.get(i);
+		Map<Integer, Double> map = new HashMap<Integer, Double>();
+		map.put(0, previous);
+		i++;
+		for (; i < old.size(); i++) {
+			double result = Math.pow(Math.abs(old.get(i) - previous), Alpha);
+			if (old.get(i) < previous) {
+				result = 0 - result;
+			}
+			result = map.get(i - 1) + result;
+			map.put(i, result);
+		}
+		old = map;
+	}
+
+	// 设置Baseline Normalization for TimeSeries
 	public static void setBaselineNormalization(TimeSeries old, double beta) {
 		Iterator iter = old.getMap().entrySet().iterator();
 		double sum = 0;
@@ -66,6 +85,27 @@ public class Preprocess {
 			double val = entry.getValue();
 			entry.setValue(Math.pow((val / sum), beta));
 		}
+	}
+
+	// 设置Baseline Normalization for TimeSeries Map
+	public static Map<Integer, Double> setBaselineNormalizationMap(
+			Map<Integer, Double> old, double beta) {
+		Iterator iter = old.entrySet().iterator();
+		double sum = 0;
+		while (iter.hasNext()) {
+			Entry<Integer, Double> entry = (Entry<Integer, Double>) iter.next();
+			double val = entry.getValue();
+			sum += val;
+		}
+		Map<Integer, Double> newMap = new HashMap<Integer, Double>();
+		iter = old.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<Integer, Double> entry = (Entry<Integer, Double>) iter.next();
+			int key = entry.getKey();
+			double val = entry.getValue();
+			newMap.put(key, Math.pow((val / sum), beta));
+		}
+		return newMap;
 	}
 
 	// 截取时间序列的生命周期
@@ -133,11 +173,4 @@ public class Preprocess {
 		return null;
 	}
 
-	public static void main(String[] args) throws ParseException {
-		TimeSeries timeSeries = initalTimeSeries("data/搜狗每日热词/广州火车站砍人");
-		setLifecycle(timeSeries);
-		setBaselineNormalization(timeSeries, 1);
-//		setSpikeNormalization1(timeSeries, 1.2);
-		setSpikeNormalization2(timeSeries, 1.2);
-	}
 }
