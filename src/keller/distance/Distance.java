@@ -10,8 +10,9 @@ import keller.preprocessing.Preprocess;
 public class Distance {
 
 	// 获取等长时间序列距离
-	public static double getEquilongTimeSeriesDistance(Map<Integer, Double> ts1,
-			Map<Integer, Double> ts2) throws TimeSeriesNotEquilongException {
+	public static double getEquilongTimeSeriesDistance(
+			Map<Integer, Double> ts1, Map<Integer, Double> ts2)
+			throws TimeSeriesNotEquilongException {
 		if (ts1.size() != ts2.size()) {
 			// 抛出异常
 			throw new TimeSeriesNotEquilongException(
@@ -29,7 +30,11 @@ public class Distance {
 	public static double getTimeSeriesDistance(Map<Integer, Double> ts1,
 			Map<Integer, Double> ts2) throws TimeSeriesNotEquilongException {
 		if (ts1.size() == ts2.size()) {
-			return getEquilongTimeSeriesDistance(ts1, ts2);
+			Map<Integer, Double> newMap1 = Preprocess
+					.setBaselineNormalizationMap(ts1, 1);
+			Map<Integer, Double> newMap2 = Preprocess
+					.setBaselineNormalizationMap(ts2, 1);
+			return getEquilongTimeSeriesDistance(newMap1, newMap2);
 		} else {
 			double result = -1;
 			int size = ts1.size();

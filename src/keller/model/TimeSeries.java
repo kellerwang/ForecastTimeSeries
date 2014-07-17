@@ -8,6 +8,15 @@ public class TimeSeries {
 	private String startDate = null;
 	private String endDate = null;
 	private Map<Integer, Double> map = new HashMap<Integer, Double>();
+	private int clusterNum;
+
+	public int getClusterNum() {
+		return clusterNum;
+	}
+
+	public void setClusterNum(int clusterNum) {
+		this.clusterNum = clusterNum;
+	}
 
 	public void setMap(Map<Integer, Double> map) {
 		this.map = map;
