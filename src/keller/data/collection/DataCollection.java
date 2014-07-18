@@ -10,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import keller.util.MyFileWriter;
+
 public class DataCollection {
 	// 抓取网页数据
 	public static String captureHtmlTimeSeries(String keyStr)
@@ -70,7 +72,7 @@ public class DataCollection {
 						// System.out.println(hotword);
 						String result = captureHtmlTimeSeries(hotword);
 						if (result != null) {
-							writeToFile("out/" + hotword, result);
+							MyFileWriter.writeToFile("out/" + hotword, result);
 						} else {
 							System.out.println("ERROR!");
 						}
@@ -106,7 +108,7 @@ public class DataCollection {
 				String hotword = tempArray[1].replace("search", "");
 				String result = captureHtmlTimeSeries(hotword);
 				if (result != null) {
-					writeToFile("out/" + hotword, result);
+					MyFileWriter.writeToFile("out/" + hotword, result);
 				} else {
 					System.out.println("ERROR!");
 				}
@@ -138,7 +140,7 @@ public class DataCollection {
 				String hotword = tempString.trim();
 				String result = captureHtmlTimeSeries(hotword);
 				if (result != null) {
-					writeToFile("out/" + hotword, result);
+					MyFileWriter.writeToFile("out/" + hotword, result);
 				} else {
 					System.out.println("ERROR!");
 				}
@@ -157,16 +159,7 @@ public class DataCollection {
 		}
 	}
 
-	// 写入文件
-	public static void writeToFile(String filename, String temp)
-			throws IOException {
-		FileWriter fw = null;
-		fw = new FileWriter(filename);
-		fw.write(temp);
-		fw.close();
-	}
-
 	public static void main(String[] args) throws IOException {
-		
+
 	}
 }

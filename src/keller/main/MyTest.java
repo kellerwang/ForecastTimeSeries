@@ -1,6 +1,7 @@
 package keller.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ import keller.util.MyRandom;
 
 public class MyTest {
 	public static void main(String[] args) throws ParseException,
-			DataNullException, TimeSeriesNotEquilongException {
+			DataNullException, TimeSeriesNotEquilongException, IOException {
 		String filepath = "data/百度世说新词";
 		File file = new File(filepath);
 		if (file.isDirectory()) {
