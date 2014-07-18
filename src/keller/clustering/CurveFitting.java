@@ -68,6 +68,7 @@ public class CurveFitting {
 						temp1);
 				if (result == -1) {
 					result = temp;
+					newTempMap = newMap;
 				} else {
 					if (result > temp) {
 						result = temp;
@@ -82,7 +83,7 @@ public class CurveFitting {
 			if (ts1.size() > ts2.size()) {
 				temp3 = ts1;
 			}
-			while (temp3.get(i) != 0) {
+			while (temp3.get(i) == 0) {
 				i++;
 			}
 			multiple = temp3.get(i) / newTempMap.get(i - start);
@@ -96,7 +97,7 @@ public class CurveFitting {
 			}
 			Map<Integer, Double> resultMap = new HashMap<Integer, Double>();
 			for (int j = 0; j < temp3.size(); j++) {
-				if (j >= start && j < (start + length)) {
+				if (j >= start && j < (start + temp4.size())) {
 					resultMap.put(j, temp4.get(j - start));
 				} else {
 					resultMap.put(j, temp3.get(j));

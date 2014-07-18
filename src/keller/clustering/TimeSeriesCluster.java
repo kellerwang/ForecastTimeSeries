@@ -83,17 +83,21 @@ public class TimeSeriesCluster {
 	}
 
 	// 计算新的簇中心曲线集
-	public void calNewCenter() throws TimeSeriesNotEquilongException {
+	public double calNewCenter() throws TimeSeriesNotEquilongException {
+		double result = 0;
 		for (int i = 0; i < k; i++) {
 			List<TimeSeries> newList = getOneCluster(i);
-			centerMap.remove(i);
+			TimeSeries oldCentralCurve = centerMap.get(i);
 			TimeSeries newCentralCurve = getCentralCurveCluster(newList);
+			result += Distance.getDistance(oldCentralCurve, newCentralCurve);
 			if (newCentralCurve != null) {
+				centerMap.remove(i);
 				centerMap.put(i, newCentralCurve);
 			} else {
 				// 抛出异常
 			}
 		}
+		return (result / k);
 	}
 
 	// 拟合两条时间序列
@@ -116,7 +120,7 @@ public class TimeSeriesCluster {
 	public TimeSeries getCentralCurveCluster(List<TimeSeries> cluster)
 			throws TimeSeriesNotEquilongException {
 		TimeSeries tsPro = cluster.get(0);
-		for (int i = 0; i < cluster.size(); i++) {
+		for (int i = 1; i < cluster.size(); i++) {
 			TimeSeries tsNow = cluster.get(i);
 			tsPro = getCentralCurve(tsPro, tsNow);
 		}
@@ -150,6 +154,20 @@ public class TimeSeriesCluster {
 				centerMap.put(clusterNum, data.get(temp));
 				clusterNum++;
 			}
+		}
+	}
+
+	// 迭代聚类
+	public void iterationCluster() throws DataNullException,
+			TimeSeriesNotEquilongException {
+		initCenter();
+		double tempThreshold = 0;
+		for (int i = 0; i < repeat; i++) {
+			if (i >= 10 && tempThreshold < threshold) {
+				break;
+			}
+			classifyData();
+			tempThreshold = calNewCenter();
 		}
 	}
 }
