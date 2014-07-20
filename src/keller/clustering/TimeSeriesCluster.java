@@ -207,7 +207,7 @@ public class TimeSeriesCluster {
 			tempThreshold = calNewCenter();
 
 		}
-		CurveGraph cg = new CurveGraph(centerMap);
+		CurveGraph cg = new CurveGraph(centerMap, data);
 		printCentralCurve(repeat);
 		printClusterElement();
 		System.out.println("tempThreshold: " + tempThreshold);
