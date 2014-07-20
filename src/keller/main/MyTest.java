@@ -16,6 +16,8 @@ import keller.exception.TimeSeriesNotEquilongException;
 import keller.model.TimeSeries;
 import keller.preprocessing.Preprocess;
 import keller.util.MyRandom;
+import keller.visualization.CurveGraph;
+import keller.visualization.GraphDemo;
 
 public class MyTest {
 	public static void main(String[] args) throws ParseException,

@@ -12,8 +12,10 @@ import keller.distance.Distance;
 import keller.exception.DataNullException;
 import keller.exception.TimeSeriesNotEquilongException;
 import keller.model.TimeSeries;
+import keller.preprocessing.Preprocess;
 import keller.util.MyFileWriter;
 import keller.util.MyRandom;
+import keller.visualization.CurveGraph;
 
 public class TimeSeriesCluster {
 	private int k = 6;
@@ -94,6 +96,8 @@ public class TimeSeriesCluster {
 			result += Distance.getDistance(oldCentralCurve, newCentralCurve);
 			if (newCentralCurve != null) {
 				centerMap.remove(i);
+				newCentralCurve.setMap(Preprocess.setBaselineNormalizationMap(
+						newCentralCurve.getMap(), 1));
 				centerMap.put(i, newCentralCurve);
 			} else {
 				// 抛出异常
@@ -201,8 +205,10 @@ public class TimeSeriesCluster {
 			}
 			classifyData();
 			tempThreshold = calNewCenter();
-			printCentralCurve(i);
+
 		}
+		CurveGraph cg = new CurveGraph(centerMap);
+		printCentralCurve(repeat);
 		printClusterElement();
 		System.out.println("tempThreshold: " + tempThreshold);
 	}
