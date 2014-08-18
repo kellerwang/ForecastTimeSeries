@@ -13,6 +13,32 @@ public class Statistics {
 		}
 	}
 
+	// 求数组最大值
+	public double getMax() {
+		if (data == null || data.length == 0)
+			return -1;
+		int len = data.length;
+		double max = data[0];
+		for (int i = 0; i < len; i++) {
+			if (max < data[i])
+				max = data[i];
+		}
+		return max;
+	}
+
+	// 求数组最小值
+	public double getMin() {
+		if (data == null || data.length == 0)
+			return -1;
+		int len = data.length;
+		double min = data[0];
+		for (int i = 0; i < len; i++) {
+			if (min > data[i])
+				min = data[i];
+		}
+		return min;
+	}
+
 	// 求数组数值和
 	public double getSum() {
 		if (data == null || data.length == 0)

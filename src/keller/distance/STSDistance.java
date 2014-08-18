@@ -23,7 +23,7 @@ public class STSDistance {
 						- (map2.get(i + 1) - map2.get(i));
 				result += temp * temp;
 			}
-			return result;
+			return result / map1.size();
 		}
 	}
 
@@ -58,7 +58,7 @@ public class STSDistance {
 					}
 				}
 			}
-			return result;
+			return result / size;
 		}
 	}
 

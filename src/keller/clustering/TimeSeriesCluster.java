@@ -10,6 +10,7 @@ import java.util.Set;
 
 import keller.distance.Distance;
 import keller.exception.DataNullException;
+import keller.exception.NoCentralCurveException;
 import keller.exception.TimeSeriesNotEquilongException;
 import keller.model.TimeSeries;
 import keller.preprocessing.Preprocess;
@@ -66,7 +67,7 @@ public class TimeSeriesCluster {
 	public void classifyData() throws DataNullException,
 			TimeSeriesNotEquilongException {
 		if (this.data == null) {
-			throw new DataNullException("TimeSeries is not equilong!");
+			throw new DataNullException("No data!");
 		} else {
 			Iterator<TimeSeries> iter = data.iterator();
 			while (iter.hasNext()) {
@@ -87,20 +88,23 @@ public class TimeSeriesCluster {
 	}
 
 	// 计算新的簇中心曲线集
-	public double calNewCenter() throws TimeSeriesNotEquilongException {
+	public double calNewCenter() throws TimeSeriesNotEquilongException,
+			NoCentralCurveException {
 		double result = 0;
 		for (int i = 0; i < k; i++) {
 			List<TimeSeries> newList = getOneCluster(i);
 			TimeSeries oldCentralCurve = centerMap.get(i);
 			TimeSeries newCentralCurve = getCentralCurveCluster(newList);
-			result += Distance.getDistance(oldCentralCurve, newCentralCurve);
 			if (newCentralCurve != null) {
+				result += Distance
+						.getDistance(oldCentralCurve, newCentralCurve);
 				centerMap.remove(i);
 				newCentralCurve.setMap(Preprocess.setBaselineNormalizationMap(
 						newCentralCurve.getMap(), 1));
 				centerMap.put(i, newCentralCurve);
 			} else {
 				// 抛出异常
+				throw new NoCentralCurveException("No Central Curve!");
 			}
 		}
 		return (result / ((double) k));
@@ -129,7 +133,7 @@ public class TimeSeriesCluster {
 		TimeSeries tsPro = cluster.get(0);
 		for (int i = 1; i < cluster.size(); i++) {
 			TimeSeries tsNow = cluster.get(i);
-			tsPro = getCentralCurve(tsPro, tsNow, (i + 1));
+			tsPro = getCentralCurve(tsPro, tsNow, i);
 		}
 		return tsPro;
 	}
@@ -150,7 +154,7 @@ public class TimeSeriesCluster {
 	// 初始化簇中心曲线集
 	public void initCenter() throws DataNullException {
 		if (this.data == null) {
-			throw new DataNullException("TimeSeries is not equilong!");
+			throw new DataNullException("No data!");
 		} else {
 			Set<Integer> randomSet = MyRandom.getRandomNonRepetitive(this.k,
 					this.data.size());
@@ -164,40 +168,10 @@ public class TimeSeriesCluster {
 		}
 	}
 
-	// 打印簇元素
-	public void printClusterElement() throws IOException {
-		Iterator<TimeSeries> it = data.iterator();
-		while (it.hasNext()) {
-			TimeSeries tempTS = it.next();
-			MyFileWriter.writeToFileAppend(
-					"result/data/cluster" + tempTS.getClusterNum(),
-					tempTS.getKey() + "\n");
-		}
-	}
-
-	// 打印中心曲线
-	public void printCentralCurve(int repeatTime) throws IOException {
-		for (int i = 0; i < centerMap.size(); i++) {
-			Map<Integer, Double> map = centerMap.get(i).getMap();
-			StringBuilder contentBuf = new StringBuilder();
-
-			for (int j = 0; j < map.size(); j++) {
-				contentBuf.append(map.get(j));
-				if (j != (map.size() - 1)) {
-					contentBuf.append(",");
-				}
-			}
-			String buf = new String(contentBuf.toString());
-			String fileName = "result/centralCurve/" + i + "repeatTime"
-					+ repeatTime;
-			MyFileWriter.writeToFile(fileName, buf);
-		}
-	}
-
 	// 迭代聚类
 	public void iterationCluster() throws DataNullException,
-			TimeSeriesNotEquilongException, IOException {
-		initCenter();
+			TimeSeriesNotEquilongException, IOException,
+			NoCentralCurveException {
 		double tempThreshold = 0;
 		for (int i = 0; i < repeat; i++) {
 			if (i >= 10 && tempThreshold < threshold) {
@@ -208,8 +182,8 @@ public class TimeSeriesCluster {
 
 		}
 		CurveGraph cg = new CurveGraph(centerMap, data);
-		printCentralCurve(repeat);
-		printClusterElement();
+		ClusterPrint.printCentralCurve(centerMap, repeat);
+		ClusterPrint.printClusterElement(data);
 		System.out.println("tempThreshold: " + tempThreshold);
 	}
 }
