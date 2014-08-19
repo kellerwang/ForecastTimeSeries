@@ -25,11 +25,15 @@ public class STSCurveMerge {
 			int length = map2.size() - map1.size() + 1;
 			Map<Integer, Double> longerMap = map2;
 			Map<Integer, Double> shorterMap = map1;
+			double tempWeight1 = weight2;
+			double tempWeight2 = weight1;
 			if (map1.size() > map2.size()) {
 				size = map2.size();
 				length = map1.size() - map2.size() + 1;
 				shorterMap = map2;
 				longerMap = map1;
+				tempWeight1 = weight1;
+				tempWeight2 = weight2;
 			}
 			Map<Integer, Double> newTempMap = null;
 			int start = 0;
@@ -51,10 +55,12 @@ public class STSCurveMerge {
 					}
 				}
 			}
+			Map<Integer, Double> newMap = getEqualMapCurveFitting(newTempMap,
+					shorterMap, tempWeight1, tempWeight2);
 			Map<Integer, Double> resultMap = new HashMap<Integer, Double>();
 			for (int j = 0; j < longerMap.size(); j++) {
 				if (j >= start && j < (start + shorterMap.size())) {
-					resultMap.put(j, newTempMap.get(j - start));
+					resultMap.put(j, newMap.get(j - start));
 				} else {
 					resultMap.put(j, longerMap.get(j));
 				}
@@ -74,7 +80,7 @@ public class STSCurveMerge {
 					"Two maps are not equilong!");
 		} else {
 			Map<Integer, Double> newMap = new HashMap<Integer, Double>();
-			for (int i = 0; i < (map1.size() - 1); i++) {
+			for (int i = 0; i < map1.size(); i++) {
 				double tempValue = (map1.get(i) * weight1 + map2.get(i)
 						* weight2)
 						/ (weight1 + weight2);

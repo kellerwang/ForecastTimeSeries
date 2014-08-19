@@ -5,6 +5,7 @@ import java.util.Map;
 
 import keller.exception.TimeSeriesNotEquilongException;
 import keller.model.TimeSeries;
+import keller.preprocessing.NewPreprocess;
 import keller.preprocessing.Preprocess;
 
 public class STSDistance {

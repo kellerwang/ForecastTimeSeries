@@ -109,7 +109,7 @@ public class Preprocess {
 	}
 
 	// 截取时间序列的生命周期
-	public static void setLifecycle(TimeSeries old) throws ParseException {
+	public static int setLifecycle(TimeSeries old) throws ParseException {
 		int start = 0;
 		for (; start < old.getMap().size(); start++) {
 			if (old.getMap().get(start) != 0) {
@@ -139,7 +139,7 @@ public class Preprocess {
 			}
 			old.setMap(map);
 		}
-
+		return old.getMap().size();
 	}
 
 	// 读取一个时间序列文件并存储在TimeSeries数据结构中

@@ -1,6 +1,7 @@
 package keller.clustering;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import keller.accuracy.ClusterAccuracy;
 import keller.distance.Distance;
 import keller.exception.DataNullException;
 import keller.exception.NoCentralCurveException;
@@ -162,7 +164,8 @@ public class TimeSeriesCluster {
 			int clusterNum = 0;
 			while (it.hasNext()) {
 				int temp = it.next();
-				centerMap.put(clusterNum, data.get(temp));
+				centerMap.put(clusterNum, new TimeSeries(data.get(temp)
+						.getMap()));
 				clusterNum++;
 			}
 		}
@@ -171,7 +174,7 @@ public class TimeSeriesCluster {
 	// 迭代聚类
 	public void iterationCluster() throws DataNullException,
 			TimeSeriesNotEquilongException, IOException,
-			NoCentralCurveException {
+			NoCentralCurveException, ParseException {
 		double tempThreshold = 0;
 		for (int i = 0; i < repeat; i++) {
 			if (i >= 10 && tempThreshold < threshold) {
@@ -185,5 +188,8 @@ public class TimeSeriesCluster {
 		ClusterPrint.printCentralCurve(centerMap, repeat);
 		ClusterPrint.printClusterElement(data);
 		System.out.println("tempThreshold: " + tempThreshold);
+		for (int i = 0; i < k; i++) {
+			ClusterAccuracy.getBaiduHotSearchesScale("百度热门搜索", i);
+		}
 	}
 }
