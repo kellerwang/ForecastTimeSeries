@@ -5,34 +5,31 @@ import java.util.Map;
 
 import keller.exception.TimeSeriesNotEquilongException;
 import keller.model.TimeSeries;
-import keller.preprocessing.NewPreprocess;
-import keller.preprocessing.Preprocess;
 
-public class STSDistance {
+public class EuclideanDisstance {
 
-	// 获取等长时间序列Map数组的STS距离
-	public static double getEquilongSTSDistance(Map<Integer, Double> map1,
-			Map<Integer, Double> map2) throws TimeSeriesNotEquilongException {
+	// 获取等长时间序列Map数组的欧式距离
+	public static double getEquilongEuclideanDistance(
+			Map<Integer, Double> map1, Map<Integer, Double> map2)
+			throws TimeSeriesNotEquilongException {
 		if (map1.size() != map2.size()) {
 			// 抛出异常
 			throw new TimeSeriesNotEquilongException(
 					"TimeSeries is not equilong!");
 		} else {
-			double result = 0;
-			for (int i = 0; i < (map1.size() - 1); i++) {
-				double temp = (map1.get(i + 1) - map1.get(i))
-						- (map2.get(i + 1) - map2.get(i));
-				result += temp * temp;
+			double sum = 0;
+			for (int i = 0; i < map1.size(); i++) {
+				sum += Math.pow((map1.get(i) - map2.get(i)), 2);
 			}
-			return result / map1.size();
+			return sum / map1.size();
 		}
 	}
 
-	// 获取时间序列Map数组的STS距离
-	public static double getSTSDistance(Map<Integer, Double> map1,
+	// 获取时间序列Map数组的欧式距离
+	public static double getEuclideanDistance(Map<Integer, Double> map1,
 			Map<Integer, Double> map2) throws TimeSeriesNotEquilongException {
 		if (map1.size() == map2.size()) {
-			return getEquilongSTSDistance(map1, map2);
+			return getEquilongEuclideanDistance(map1, map2);
 		} else {
 			double result = -1;
 			int size = map1.size();
@@ -50,7 +47,8 @@ public class STSDistance {
 				for (int j = 0; j < size; j++) {
 					tempMap.put(j, longerMap.get(j + i));
 				}
-				double tempResult = getEquilongSTSDistance(tempMap, shorterMap);
+				double tempResult = getEquilongEuclideanDistance(tempMap,
+						shorterMap);
 				if (result == -1) {
 					result = tempResult;
 				} else {
@@ -63,9 +61,10 @@ public class STSDistance {
 		}
 	}
 
-	// 获取时间序列间STS距离
+	// 获取时间序列间欧式距离
 	public static double getDistance(TimeSeries ts1, TimeSeries ts2)
 			throws TimeSeriesNotEquilongException {
-		return getSTSDistance(ts1.getMap(), ts2.getMap());
+		return getEuclideanDistance(ts1.getMap(), ts2.getMap());
 	}
+
 }

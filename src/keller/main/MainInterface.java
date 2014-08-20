@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import keller.accuracy.ClusterAccuracy;
+import keller.clustering.EuclideanCluster;
 import keller.clustering.STSCluster;
 import keller.clustering.TimeSeriesCluster;
 import keller.distance.Distance;
@@ -31,13 +32,13 @@ import keller.util.Statistics;
 import keller.visualization.CurveGraph;
 import keller.visualization.GraphDemo;
 
-public class MyTest {
+public class MainInterface {
 	public static SimpleDateFormat df = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
 
 	// 显示STS距离聚类版本的结果
-	public static void showSTSClusteringResult(int k, double threshold,
-			int repeat, String filepath, int minLongOfTS)
+	public static Map<Integer, TimeSeries> showSTSClusteringResult(int k,
+			double threshold, int repeat, String filepath, int minLongOfTS)
 			throws ParseException, DataNullException,
 			TimeSeriesNotEquilongException, IOException {
 		System.out.println("Start Time: " + df.format(new Date()));
@@ -45,14 +46,14 @@ public class MyTest {
 				true, minLongOfTS);
 		STSCluster sts = new STSCluster(k, threshold, repeat, dataList);
 		sts.iterationCluster();
-		sts.showResult();
 		System.out.println("End Time: " + df.format(new Date()));
+		return sts.showResult();
 	}
 
 	// 显示聚类版本1的结果
-	public static void showEuclideanClusteringResult1(int k, double threshold,
-			int repeat, String filepath, int minLongOfTS)
-			throws ParseException, DataNullException,
+	public static Map<Integer, TimeSeries> showEuclideanClusteringResult1(
+			int k, double threshold, int repeat, String filepath,
+			int minLongOfTS) throws ParseException, DataNullException,
 			TimeSeriesNotEquilongException, IOException,
 			NoCentralCurveException {
 		System.out.println("Start Time: " + df.format(new Date()));
@@ -62,11 +63,23 @@ public class MyTest {
 				dataList);
 		tsc.iterationCluster();
 		System.out.println("End Time: " + df.format(new Date()));
+		return tsc.showResult();
 	}
 
-	public static void main(String[] args) throws IOException, ParseException,
-			TimeSeriesNotEquilongException, DataNullException,
+	// 显示欧式聚类版本的结果
+	public static Map<Integer, TimeSeries> showEuclideanClusteringResult2(
+			int k, double threshold, int repeat, String filepath,
+			int minLongOfTS) throws ParseException, DataNullException,
+			TimeSeriesNotEquilongException, IOException,
 			NoCentralCurveException {
-		String filepath = "data/数据1";
+		System.out.println("Start Time: " + df.format(new Date()));
+		List<TimeSeries> dataList = MyFileReader.getDataFromFilePath(filepath,
+				true, minLongOfTS);
+		EuclideanCluster ec = new EuclideanCluster(k, threshold, repeat,
+				dataList);
+		ec.iterationCluster();
+		System.out.println("End Time: " + df.format(new Date()));
+		return ec.showResult();
 	}
+
 }

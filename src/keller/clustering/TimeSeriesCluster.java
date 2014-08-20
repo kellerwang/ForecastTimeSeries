@@ -184,12 +184,16 @@ public class TimeSeriesCluster {
 			tempThreshold = calNewCenter();
 
 		}
-		CurveGraph cg = new CurveGraph(centerMap, data);
-		ClusterPrint.printCentralCurve(centerMap, repeat);
-		ClusterPrint.printClusterElement(data);
 		System.out.println("tempThreshold: " + tempThreshold);
+	}
+
+	// 打印显示中心曲线结果
+	public Map<Integer, TimeSeries> showResult()
+			throws TimeSeriesNotEquilongException, IOException, ParseException {
+		ClusterPrint.printClusterElement(data);
 		for (int i = 0; i < k; i++) {
 			ClusterAccuracy.getBaiduHotSearchesScale("百度热门搜索", i);
 		}
+		return centerMap;
 	}
 }
