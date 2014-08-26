@@ -134,9 +134,23 @@ public class EuclideanCluster {
 			throws TimeSeriesNotEquilongException, IOException, ParseException {
 		ClusterPrint.printClusterElement(data);
 		for (int i = 0; i < k; i++) {
-			ClusterAccuracy.getBaiduHotSearchesScale("百度热门搜索", i);
+			ClusterAccuracy.getHotWebSiteScale("网站top100_8.21", i);
 		}
 		return centerMap;
+	}
+
+	// 获得聚类结果的D-Value值
+	public double getDValue() throws TimeSeriesNotEquilongException {
+		double result = 0;
+		for (int i = 0; i < k; i++) {
+			for (int j = 0; j < k; j++) {
+				if (i != j) {
+					result += EuclideanDisstance.getDistance(centerMap.get(i),
+							centerMap.get(j));
+				}
+			}
+		}
+		return result;
 	}
 
 	// 迭代聚类
@@ -144,7 +158,8 @@ public class EuclideanCluster {
 			TimeSeriesNotEquilongException {
 		double preOptimizingValue = 0;
 		double tempThreshold = 0;
-		for (int i = 0; i < repeat; i++) {
+		int i = 0;
+		for (; i < repeat; i++) {
 			if (i >= 10 && tempThreshold < threshold) {
 				break;
 			}
@@ -153,6 +168,8 @@ public class EuclideanCluster {
 			tempThreshold = Math.abs(preOptimizingValue - tempOptimizingValue);
 			preOptimizingValue = tempOptimizingValue;
 		}
-		System.out.println("tempThreshold: " + tempThreshold);
+		System.out.println("实际迭代次数: " + i);
+		System.out.println("F值: " + preOptimizingValue);
+		System.out.println("D值: " + getDValue());
 	}
 }

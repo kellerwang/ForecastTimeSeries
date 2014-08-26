@@ -84,4 +84,30 @@ public class ClusterAccuracy {
 		System.out.println("Cluster" + clusterNum + "百度热门搜索占比例: " + result);
 		return result;
 	}
+	
+	// 判断簇中含热门网站数的比例
+		public static double getHotWebSiteScale(String name, int clusterNum)
+				throws IOException, ParseException {
+			double result = 0;
+			String fileCluster = "result/data/cluster" + clusterNum;
+			String fileBaidu = "data/" + name;
+			List<String> dataCluster = getClusterString(fileCluster);
+			List<String> dataBaidu = getBaiduHotSearches(fileBaidu);
+			int counter = 0;
+			Iterator<String> iter = dataCluster.iterator();
+			while (iter.hasNext()) {
+				String tempCluster = iter.next();
+				if (dataBaidu.contains(tempCluster)) {
+					counter++;
+					System.out.print(tempCluster + " ");
+				} else {
+					
+				}
+			}
+			System.out.println();
+			System.out.println("Cluster" + clusterNum + "热门网站数: " + counter);
+			result = (double) counter / (double) dataCluster.size();
+			System.out.println("Cluster" + clusterNum + "热门网站占比例: " + result);
+			return result;
+		}
 }

@@ -9,11 +9,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import keller.model.TimeSeries;
 import keller.util.MyFileWriter;
 
 public class DataCollection {
-	// 抓取网页数据
+	// 抓取搜狗指数网页数据
 	public static String captureHtmlTimeSeries(String keyStr)
 			throws IOException {
 		String strURL = "http://zhishu.sogou.com/sidx?type=0&domain=-1&query="
@@ -159,7 +163,43 @@ public class DataCollection {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	// 抓取http://www.chinarank.org.cn/网页数据
+	public static void captureHtmlPaiMing() throws IOException {
+		List<String> list = new ArrayList();
+		for (int i = 1; i < 6; i++) {
+			String strURL = "http://www.chinarank.org.cn/top100/Rank.do?page="
+					+ i;
+			URL url = new URL(strURL);
+			HttpURLConnection httpConn = (HttpURLConnection) url
+					.openConnection();
+			InputStreamReader input = new InputStreamReader(
+					httpConn.getInputStream(), "gb2312");
+			BufferedReader bufReader = new BufferedReader(input);
+			String line = "";
+			StringBuilder contentBuf = new StringBuilder();
+			while ((line = bufReader.readLine()) != null) {
+				contentBuf.append(line);
+			}
+			String buf = new String(contentBuf.toString().getBytes("gb2312"),
+					"gb2312");
+			String[] tempArray = buf.split("class=\"rank_link_g02\">|查看排名信息");
+			for (int j = 0; j < tempArray.length; j++) {
+				if ((j & 1) != 0) {
+					if (j != tempArray.length - 1) {
+						String[] tempArray2 = tempArray[j].split("</a>");
+						list.add(tempArray2[0]);
+					}
+				}
+			}
+		}
+		Iterator<String> iter = list.iterator();
+		while (iter.hasNext()) {
+			String temp = iter.next();
+			System.out.println(temp);
+		}
+	}
 
+	public static void main(String[] args) throws IOException {
+		getPopularWord("wordbank/中国网站排名top100");
 	}
 }

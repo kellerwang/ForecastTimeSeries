@@ -39,6 +39,7 @@ import keller.exception.NoCentralCurveException;
 import keller.exception.TimeSeriesNotEquilongException;
 import keller.main.MainInterface;
 import keller.model.TimeSeries;
+import keller.util.DeleteAllFilesInFolder;
 import JSci.awt.DefaultGraph2DModel;
 import JSci.awt.Graph2D;
 import JSci.swing.JGraphLayout;
@@ -116,22 +117,38 @@ public class MainMenu extends JFrame {
 		final JTextField jtfRepeat = new JTextField(5);
 		JLabel labelMinLongOfTS = new JLabel("最小时间序列长：", JLabel.CENTER);
 		final JTextField jtfMinLongOfTS = new JTextField(5);
-		jtfFilePath = new JTextField(5);
+		jtfFilePath = new JTextField(10);
 		jtfFilePath.setEditable(false);
 
 		Choice choiceDistance = new Choice();
 		choiceDistance.add("欧式距离");
 		choiceDistance.add("STS距离");
 		choiceDistance.add("欧式距离z_score");
+		choiceDistance.add("等长欧式距离z_score");
+		choiceDistance.add("等长STS距离");
 		choiceDistance.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent evt) {
 				if (evt.getStateChange() == ItemEvent.SELECTED) {
 					if (evt.getItem().toString().equals("欧式距离")) {
 						choiceMethod = 0;
+						jtfMinLongOfTS.setEditable(true);
+						jtfMinLongOfTS.setText("");
 					} else if (evt.getItem().toString().equals("STS距离")) {
 						choiceMethod = 1;
+						jtfMinLongOfTS.setEditable(true);
+						jtfMinLongOfTS.setText("");
 					} else if (evt.getItem().toString().equals("欧式距离z_score")) {
 						choiceMethod = 2;
+						jtfMinLongOfTS.setEditable(true);
+						jtfMinLongOfTS.setText("");
+					} else if (evt.getItem().toString().equals("等长欧式距离z_score")) {
+						choiceMethod = 3;
+						jtfMinLongOfTS.setEditable(false);
+						jtfMinLongOfTS.setText("0");
+					} else if (evt.getItem().toString().equals("等长STS距离")) {
+						choiceMethod = 4;
+						jtfMinLongOfTS.setEditable(false);
+						jtfMinLongOfTS.setText("0");
 					}
 				}
 			}
@@ -147,6 +164,7 @@ public class MainMenu extends JFrame {
 		JButton button = new JButton("确定");
 		button.addActionListener(new ActionListener() {// 为按钮添加鼠标单击事件
 			public void actionPerformed(ActionEvent e) {
+				DeleteAllFilesInFolder.delForderInterface("result/data");
 				if (!jtfK.getText().isEmpty()
 						&& !jtfThreshold.getText().isEmpty()
 						&& !jtfRepeat.getText().isEmpty()
@@ -180,6 +198,15 @@ public class MainMenu extends JFrame {
 									.showEuclideanClusteringResult2(k,
 											threshold, repeat, filePath,
 											minLongOfTS);
+							break;
+						case 3:
+							centerMap = MainInterface
+									.showEuclideanClusteringResult3(k,
+											threshold, repeat, filePath);
+							break;
+						case 4:
+							centerMap = MainInterface.showSTSClusteringResult2(
+									k, threshold, repeat, filePath);
 							break;
 						default:
 							System.out.println("Nothing to do!");

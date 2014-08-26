@@ -67,4 +67,10 @@ public class EuclideanDisstance {
 		return getEuclideanDistance(ts1.getMap(), ts2.getMap());
 	}
 
+	// 获取等长时间序列间欧式距离
+	public static double getDistance2(TimeSeries ts1, TimeSeries ts2)
+			throws TimeSeriesNotEquilongException {
+		return getEquilongEuclideanDistance(ts1.getMap(), ts2.getMap());
+	}
+
 }
